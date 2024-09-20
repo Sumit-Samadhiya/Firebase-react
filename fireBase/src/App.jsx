@@ -5,15 +5,24 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { useEffect } from 'react';
 import {collection,getDocs} from 'firebase/firestore';
 import { db } from './config/firebase';
-import { HiOutlineUserCircle } from 'react-icons/hi';
-import {IoMdTrash} from 'react-icons/io'
-import {RiEditCircleLine} from 'react-icons/ri'
+
 import ContactCard from './components/ContactCard';
+import Model from './components/Model';
 
 
 const App = () => {
 
   const [contacts,setContacts] = useState([]);
+
+  const [isOpen,setOpen]=useState(false);
+
+  const onOpen = () =>{
+    setOpen(true)
+  }
+
+  const onClose = () =>{
+    setOpen(close)
+  }
 
   useEffect(() => {
     const getContacts = async () =>{
@@ -37,6 +46,7 @@ const App = () => {
 
 
   return (
+    <>
     <div className='mx-auto max-w-[370px] px-4'>
       <Navbar />
 
@@ -48,13 +58,13 @@ const App = () => {
         <input type="text" className='flex-grow h-10 border bg-transparent border-white rounded-md text-white pl-9' />
         
   
-          <FaCirclePlus className="text-4xl text-white cursor-pointer" />
+          <FaCirclePlus  onClick={onOpen} className="text-4xl text-white cursor-pointer" />
       
 
         </div>
       </div>
 
-      <div className='mt-4'>
+      <div className='mt-4 flex flex-col gap-3 '>
         {contacts.map((contact) => (
           <ContactCard key={contact.id} contact={contact} />
         ) )}
@@ -62,6 +72,8 @@ const App = () => {
         
       
     </div>
+    <Model isOpen={isOpen} onClose={onClose} >  </Model>
+    </>
   );
 };
 

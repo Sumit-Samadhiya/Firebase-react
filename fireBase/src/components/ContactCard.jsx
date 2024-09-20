@@ -5,7 +5,7 @@ import { RiEditCircleLine } from 'react-icons/ri'
 
 const ContactCard = ({ contact }) => {
   return (
-    <div key={contact.id} className='bg-yellow-200 flex  justify-around items-center rounded-lg p-2'>
+    <div key={contact.id} className='bg-yellow-200 flex  justify-between items-center rounded-lg p-2'>
             
             <div className='flex gap-1'>
             <HiOutlineUserCircle  className='text-orange-500 text-3xl'/>
