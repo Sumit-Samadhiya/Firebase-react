@@ -3,46 +3,44 @@ import Navbar from './components/Navbar'
 import {FiSearch} from "react-icons/fi"
 import { FaCirclePlus } from "react-icons/fa6";
 import { useEffect } from 'react';
-import {collection,getDocs} from 'firebase/firestore';
+import {collection,getDocs,onSnapshot} from 'firebase/firestore';
 import { db } from './config/firebase';
 
 import ContactCard from './components/ContactCard';
-import Model from './components/Model';
+
+import AddAndUpdateContact from './components/AddAndUpdateContact';
+import useDisclouse from './hooks/useDisclouse';
 
 
 const App = () => {
 
   const [contacts,setContacts] = useState([]);
 
-  const [isOpen,setOpen]=useState(false);
-
-  const onOpen = () =>{
-    setOpen(true)
-  }
-
-  const onClose = () =>{
-    setOpen(close)
-  }
+  const {isOpen,onClose,onOpen}=useDisclouse();
 
   useEffect(() => {
-    const getContacts = async () =>{
+    const getContacts = async () => {
+      try {
+        const contactsRef = collection(db, "contacts");
 
-      try{
-        const contactsRef = collection(db,"contacts");
-        const contactsSnapshots = await getDocs(contactsRef);
-        const contactLists = contactsSnapshots.docs.map((doc) => {
-          return {
-            id: doc.id,
-            ...doc.data(),
-          };
+        onSnapshot(contactsRef, (snapshot) => {
+          const contactLists = snapshot.docs.map((doc) => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          });
+          setContacts(contactLists);
+          return contactLists;
         });
-        setContacts(contactLists);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
+    };
+
     getContacts();
-  })
+  }, []);
+  
 
 
   return (
@@ -72,7 +70,7 @@ const App = () => {
         
       
     </div>
-    <Model isOpen={isOpen} onClose={onClose} >  </Model>
+        <AddAndUpdateContact onClose={onClose} isOpen={isOpen}/>
     </>
   );
 };
